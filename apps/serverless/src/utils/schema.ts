@@ -25,18 +25,3 @@ export function createParamSchema(name: string, type: 'string' | 'number' , minL
     example: example,
   });
 }
-
-export function createParamSchema2(name: string, type: 'string' | 'number' , minLength?: number) {
-  let schema = z[type]();
-  if (type === 'string' && minLength) {
-    schema = schema.min(minLength);
-  }
-  const example = type === 'string' ? 'example' : 123;
-  return schema.openapi({
-    param: {
-      name: name,
-      in: 'path',
-    },
-    example: example,
-  });
-}

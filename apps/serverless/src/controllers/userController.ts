@@ -55,6 +55,7 @@ export default (app: OpenAPIHono) => {
   app.openapi(RegisterController, async (c: any) => {
     const { id } = c.req.valid('param') as any
     const {data} = c.req.valid('json') as any
+    // generate a cool qrcode
     await c.env.hirai?.put(id, data)
     // const { data, signature, publicKey } = c.req.valid('query') as any
     return c.json({   

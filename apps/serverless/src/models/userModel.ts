@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { createParamSchema, createParamSchema2, createSchema } from '../utils';
+import { createParamSchema, createSchema } from '../utils';
 
 type Binding = {
   "hirai": KVNamespace
@@ -14,7 +14,6 @@ export const RegisterSchema = createSchema('Register', {
 
 export const RegisterParamsSchema = z.object({
   id: createParamSchema('id', 'string', 2),
-  // data: createParamSchema2('data', 'string', 0 ),
 });
 
 export const UserSchema = createSchema('User', {
