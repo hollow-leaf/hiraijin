@@ -2,7 +2,7 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi"
 import { UserSchema, ParamsSchema, RegisterSchema, RegisterParamsSchema, bodySchema } from "../models/userModel"
 import { createController, ResponseType } from "../utils"
-
+type Bindings = { hirai: KVNamespace }
 const responses: ResponseType[] = [
   {
     statusCode: 200,
@@ -42,17 +42,20 @@ const RegisterController = createController('post', '/register/{id}', RegisterPa
 
 export default (app: OpenAPIHono) => {
   // path: /users/{id}
-  app.openapi(UserController, (c: any) => {
+  app.openapi(UserController, async (c: any) => {
     const { id } = c.req.valid('param') as any
+    const data = await c.env.hirai?.get(id)
+    console.log('data', data)
     return c.json({
-      id
+      id,
+      data
     })
   })
 
-  app.openapi(RegisterController, (c: any) => {
+  app.openapi(RegisterController, async (c: any) => {
     const { id } = c.req.valid('param') as any
     const {data} = c.req.valid('json') as any
-
+    await c.env.hirai?.put(id, data)
     // const { data, signature, publicKey } = c.req.valid('query') as any
     return c.json({   
       id,
