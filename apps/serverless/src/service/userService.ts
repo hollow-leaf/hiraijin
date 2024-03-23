@@ -1,16 +1,13 @@
-import fetch from "node-fetch"
+// import fetch from "node-fetch"
 import forge from 'node-forge'
 import { v4 as uuidv4 } from 'uuid'
-import { config as dotenvConfig } from 'dotenv'
-import { resolve } from 'path'
-
-dotenvConfig({ path: resolve(__dirname, './.env') })
-
+import { ENV } from '../utils/env';
 // 生成 UUID v4
 function generateUUIDv4() {
     return uuidv4()
 }
 
+  
 // 加密函數
 function encryptData(publicKey: any, entitySecret: any) {
     const encryptedData = publicKey.encrypt(entitySecret, 'RSA-OAEP', {
@@ -23,7 +20,7 @@ function encryptData(publicKey: any, entitySecret: any) {
 }
 
 // 創建錢包函數
-async function createWallets() {
+export async function createWallets() {
     const url = 'https://api.circle.com/v1/w3s/developer/wallets'
     const uuid = generateUUIDv4()
 
@@ -52,7 +49,7 @@ async function createWallets() {
         headers: {
             'accept': 'application/json',
             'content-type': 'application/json',
-            'authorization': `Bearer ${process.env.TEST_API_KEY}`,
+            'authorization': `Bearer ${ENV}`,
         },
         body: JSON.stringify({
             blockchains: ['MATIC-MUMBAI'],
@@ -72,6 +69,6 @@ async function createWallets() {
     }
 }
 
-createWallets()
-  .then(data => console.log(data))
-  .catch(err => console.error('Error:', err.message))
+// createWallets()
+//   .then(data => console.log(data))
+//   .catch(err => console.error('Error:', err.message))
