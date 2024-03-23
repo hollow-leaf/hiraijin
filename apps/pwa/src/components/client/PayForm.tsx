@@ -39,7 +39,6 @@ export default function PayForm({
 }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,23 +48,27 @@ export default function PayForm({
     },
   });
 
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      'Access-Control-Allow-Origin': '*',
+      "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+    }
+  }
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        'Access-Control-Allow-Origin': '*',
-        "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
-      }
-    }
     const body = {
-      data: values.amount.toString()
+      data: "",
+      from: "",
+      tokenId: "",
+      amount: values.amount.toString()
     }
+    setIsLoading(true);
+
     // ✅ This will be type-safe and validated.
-    axios.post(`https://hiraijin.kidneyweakx.workers.dev/pay/${values.receiver}`, body, config)
+    axios.post(`http://localhost:8787/pay/${values.receiver}`, body, config)
       .then(function (response) {
-        console.log(response);
         setOpenDialog(true)
         setIsLoading(false);
       })
@@ -140,7 +143,6 @@ export default function PayForm({
               <DialogClose asChild>
                 <Button
                   onClick={() => {
-                    console.log(`Remove localStorage`)
                   }}>OK
                 </Button>
               </DialogClose>

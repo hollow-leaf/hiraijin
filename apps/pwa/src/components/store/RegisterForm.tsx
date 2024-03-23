@@ -65,7 +65,7 @@ export default function RegisterForm({
       data: timestamp.toString()
     }
 
-    axios.post(`https://hiraijin.kidneyweakx.workers.dev/register/${values.accountId}`, body, config)
+    axios.post(`http://localhost:8787/register/${values.accountId}`, body, config)
       .then(function (response) {
         console.log(response);
         setUserId(values.accountId)
