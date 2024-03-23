@@ -71,7 +71,7 @@ export default function RegisterForm({
         setUserId(values.accountId)
         setIsLoading(false);
         setSigned(true)
-        setWallet(response.data.data)
+        setWallet(response.data.id)
       })
       .catch(function (error) {
         console.log(error);
