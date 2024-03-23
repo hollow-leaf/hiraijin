@@ -31,8 +31,7 @@ export default function page() {
     });
     const [isSigned, setSinged] = useState(false)
     const [wallet, setWallet] = useState("TEST")
-    const [balance, setBalance] = useState(1000)
-    const [disconnectOpen, setDisconnectOpen] = useState(false)
+    const [balance, setBalance] = useState(0)
     const [linkedOpen, setLinkedOpen] = useState(false);
 
     const config = {
@@ -54,6 +53,7 @@ export default function page() {
                         if (response.data.id) {
                             console.log(response.data.walletAddress)
                             setWallet(response.data.walletAddress)
+                            setBalance(response.data.balance)
                             setSinged(true)
                         }
                     })
