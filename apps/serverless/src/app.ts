@@ -13,6 +13,10 @@ app.use('*', cors({
   maxAge: 600,
   credentials: true,
 }))
+
+app.options('*', (c: any) => {
+  return c.text('', 204)
+})
 swaggerController(app)
 userController(app)
 payController(app)
