@@ -8,7 +8,7 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 import { Spinner } from "@/components/Spinner"
-import { delay, shortenText } from "@/lib/utils"
+import { shortenText } from "@/lib/utils"
 import { useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import {
@@ -47,11 +47,13 @@ export default function page() {
     useEffect(() => {
         getUserId().then(id => {
             if (id) {
-                axios.get(`https://hiraijin.kidneyweakx.workers.dev/users/${id}`, config)
+                axios.get(`http://localhost:8787/users/${id}`, config)
                     .then(function (response) {
-                        console.log(response.data.data);
-                        if (response.data.data) {
-                            setWallet(response.data.data)
+                        console.log(response.data);
+                        console.log(response.data.id);
+                        if (response.data.id) {
+                            console.log(response.data.walletAddress)
+                            setWallet(response.data.walletAddress)
                             setSinged(true)
                         }
                     })
@@ -66,7 +68,7 @@ export default function page() {
         <main>
             <div className="mt-6 flex flex-col items-center">
                 <h1 className="mt-3 text-2xl font-bold">
-                    {isSigned ? wallet : "WELCOME HIRAIJIN"}
+                    {isSigned ? shortenText(wallet, 10) : "WELCOME HIRAIJIN"}
                 </h1>
             </div>
             {

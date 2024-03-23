@@ -23,12 +23,22 @@ export default function page() {
     const [wallet, setWallet] = useState("TEST")
     const [isSigned, setIsSigned] = useState(false)
     const [qrCode, setQRCode] = useState(false)
-    const [balance, setBalance] = useState(1000)
+    const [balance, setBalance] = useState(0)
 
     useEffect(() => {
         getUserId().then(id => {
             if (id) {
-                setIsSigned(true)
+                axios.get(`http://localhost:8787/users/${id}`, config)
+                    .then(function (response) {
+                        if (response.data.id) {
+                            console.log(response.data.walletAddress)
+                            setWallet(response.data.walletAddress)
+                            setIsSigned(true)
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
         })
     }, [isSigned])
@@ -69,11 +79,11 @@ export default function page() {
                     onClick={() =>
                         getUserId().then(id => {
                             if (id) {
-                                axios.get(`https://hiraijin.kidneyweakx.workers.dev/users/${id}`, config)
+                                axios.get(`http://localhost:8787/users/${id}`, config)
                                     .then(function (response) {
                                         console.log(response.data.data);
                                         if (response.data.data) {
-                                            setWallet(response.data.data)
+                                            setWallet(response.data.walletID)
                                             setQRCode(true)
                                         }
                                     })
