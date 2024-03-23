@@ -25,8 +25,9 @@ export default (app: OpenAPIHono) => {
   // path: /users/{id}
   app.openapi(UserController, async (c: any) => {
     const { id } = c.req.valid('param') as any
-    const { data, from, tokenId, amount } = c.req.valid('json') as any
-    const result =  await transfer(from, id, tokenId, amount)
+    const walletAddress = await c.env.hirai?.get(`${id}-address`)
+    const { amount } = c.req.valid('json') as any
+    const result =  await transfer('b483cd70-2368-515f-8524-7ac0241ea4fc', walletAddress, '6e09e3b7-48de-520d-bd8e-9620558c2b7e', amount)
     return c.json({
       result
     })
