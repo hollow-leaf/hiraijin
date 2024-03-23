@@ -7,12 +7,15 @@ type Bindings = { hirai: KVNamespace }
 const app: any = new OpenAPIHono<{ Bindings: Bindings }>()
 app.use('*', cors({
   origin: '*',
-  allowHeaders: ['Content-Type', 'Authorization'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Methods', 'Access-Control-Allow-Origin'], // Include 'Access-Control-Allow-Methods' in allowHeaders
   allowMethods: ['POST', 'GET', 'OPTIONS'],
-  exposeHeaders: ['Content-Length'],
   maxAge: 600,
   credentials: true,
 }))
+
+app.options('*', (c: any) => {
+  return c.text('', 204)
+})
 swaggerController(app)
 userController(app)
 payController(app)
