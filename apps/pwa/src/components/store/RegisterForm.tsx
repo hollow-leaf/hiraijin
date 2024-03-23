@@ -16,7 +16,7 @@ import { toast } from "react-hot-toast";
 import { Spinner } from "../Spinner";
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { setUserId, setReceiver } from "@/lib/account";
+import { setUserId } from "@/lib/account";
 
 const formSchema = z.object({
   accountId: z.string().min(1, { message: "Please select account of store" }),
@@ -27,9 +27,11 @@ const formSchema = z.object({
 export default function RegisterForm({
   className,
   setSigned,
+  setWallet
 }: {
   className?: string;
   setSigned: React.Dispatch<React.SetStateAction<boolean>>;
+  setWallet: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -64,13 +66,13 @@ export default function RegisterForm({
       data: timestamp.toString()
     }
 
-    axios.post(`https://hiraijin.kidneyweakx.workers.dev/user/${values.accountId}`, body, config)
+    axios.post(`https://hiraijin.kidneyweakx.workers.dev/register/${values.accountId}`, body, config)
       .then(function (response) {
         console.log(response);
         setUserId(values.accountId)
-        setReceiver(response.data.data)
         setIsLoading(false);
         setSigned(true)
+        setWallet(response.data.data)
       })
       .catch(function (error) {
         console.log(error);
