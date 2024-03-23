@@ -48,12 +48,23 @@ export default (app: OpenAPIHono) => {
     const walletID = await c.env.hirai?.get(`${id}-id`)
     const balance: any = await getBalance(walletID)
     const walletAddress = await c.env.hirai?.get(`${id}-address`)
-    return c.json({
-      id,
-      walletID,
-      walletAddress,
-      balance
-    })
+    if( balance.data.tokenBalances.length === 0 ) {
+      return c.json({
+        id,
+        walletID,
+        walletAddress,
+        balance: '0',
+        tokenId: '0'
+      })
+    } else {
+      return c.json({
+        id,
+        walletID,
+        walletAddress,
+        balance: balance.data.tokenBalances[1].amount,
+        tokenId: balance.data.tokenBalances[1].token.id
+      })
+    }
   })
 
   app.openapi(RegisterController, async (c: any) => {
