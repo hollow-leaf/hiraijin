@@ -50,7 +50,6 @@ export default function RegisterForm({
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     setIsLoading(true);
-    //TODO: Add receiver via api
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime / 1000);
     const config = {

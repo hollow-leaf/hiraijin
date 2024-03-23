@@ -4,6 +4,16 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from "@/components/ui/dialog"
+import {
   Form,
   FormControl,
   FormField,
@@ -15,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "react-hot-toast";
 import { Spinner } from "../Spinner";
 import { useEffect, useState } from "react";
+import axios from 'axios';
 
 const formSchema = z.object({
   receiver: z.string().min(1, { message: "Please set receiver" }),
@@ -26,13 +37,9 @@ export default function PayForm({
 }: {
   className?: string;
 }) {
-  const [types, setTypes] = useState(false);
-
   const [isLoading, setIsLoading] = React.useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
-  useEffect(() => {
-
-  }, []);
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,12 +51,32 @@ export default function PayForm({
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        'Access-Control-Allow-Origin': '*',
+        "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+      }
+    }
+    const body = {
+      data: values.amount.toString()
+    }
     // ✅ This will be type-safe and validated.
-    setIsLoading(true);
-    //TODO: Add receiver via api
-
-    setIsLoading(false);
+    axios.post(`https://hiraijin.kidneyweakx.workers.dev/pay/${values.receiver}`, body, config)
+      .then(function (response) {
+        console.log(response);
+        setOpenDialog(true)
+        setIsLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+        setOpenDialog(true)
+        setIsLoading(false);
+      }).finally(() => {
+        setOpenDialog(true)
+        setIsLoading(false);
+      });
   }
   return (
     <>
@@ -97,6 +124,30 @@ export default function PayForm({
           </Button>
         </form>
       </Form>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent className="max-w-[250px]">
+          <div>
+            <DialogHeader>
+              <div className="grid gap-4 py-4 items-center justify-center">
+                <div className="flex flex-row space-x-1">
+                  <>
+                    <div>Success</div>
+                  </>
+                </div>
+              </div>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button
+                  onClick={() => {
+                    console.log(`Remove localStorage`)
+                  }}>OK
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

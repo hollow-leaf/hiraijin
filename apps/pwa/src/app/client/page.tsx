@@ -1,5 +1,5 @@
 "use client";
-import PayForm from '@/components/store/PayForm';
+import PayForm from '@/components/client/PayForm';
 import { useEffect, useState } from 'react'
 
 export default function page() {
