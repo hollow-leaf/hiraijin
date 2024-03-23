@@ -1,8 +1,8 @@
 // lobby function
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi"
 import { UserSchema, ParamsSchema, RegisterSchema, RegisterParamsSchema, bodySchema } from "../models/userModel"
+import { createWallets } from "../service/userService"
 import { createController, ResponseType } from "../utils"
-type Bindings = { hirai: KVNamespace }
 const responses: ResponseType[] = [
   {
     statusCode: 200,
@@ -44,23 +44,31 @@ export default (app: OpenAPIHono) => {
   // path: /users/{id}
   app.openapi(UserController, async (c: any) => {
     const { id } = c.req.valid('param') as any
-    const data = await c.env.hirai?.get(id)
-    console.log('data', data)
+    const walletID = await c.env.hirai?.get(`${id}-id`)
+    const walletAddress = await c.env.hirai?.get(`${id}-address`)
     return c.json({
       id,
-      data
+      walletID,
+      walletAddress
     })
   })
 
   app.openapi(RegisterController, async (c: any) => {
     const { id } = c.req.valid('param') as any
     const {data} = c.req.valid('json') as any
+    const newWallet: any = await createWallets()
+    // console.log('newWallet', newWallet.data.wallets[0])
+    const walletID = newWallet.data.wallets[0].id
+    const walletAddress = newWallet.data.wallets[0].address
     // generate a cool qrcode
-    await c.env.hirai?.put(id, data)
+    await c.env.hirai?.put(`${id}-id`, `${walletID}`)
+    await c.env.hirai?.put(`${id}-address`, `${walletAddress}`)
+
     // const { data, signature, publicKey } = c.req.valid('query') as any
     return c.json({   
       id,
-      data
+      walletID,
+      walletAddress
     })
   })
 }
