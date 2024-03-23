@@ -2,6 +2,7 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi"
 import { UserSchema, ParamsSchema, RegisterSchema, RegisterParamsSchema, bodySchema } from "../models/userModel"
 import { createWallets } from "../service/userService"
+import { getBalance } from "../service/usdcService"
 import { createController, ResponseType } from "../utils"
 const responses: ResponseType[] = [
   {
@@ -45,11 +46,16 @@ export default (app: OpenAPIHono) => {
   app.openapi(UserController, async (c: any) => {
     const { id } = c.req.valid('param') as any
     const walletID = await c.env.hirai?.get(`${id}-id`)
+    const balance: any = await getBalance(walletID)
+    const amount = balance.data.tokenBalances[1].amount
+    const tokenId = balance.data.tokenBalances[1].token.id
     const walletAddress = await c.env.hirai?.get(`${id}-address`)
     return c.json({
       id,
       walletID,
-      walletAddress
+      walletAddress,
+      amount,
+      tokenId
     })
   })
 

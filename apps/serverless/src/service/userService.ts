@@ -1,7 +1,7 @@
 // import fetch from "node-fetch"
 import forge from 'node-forge'
 import { v4 as uuidv4 } from 'uuid'
-import { ENV } from '../utils/env';
+import { ENV } from '../utils/env'
 // 生成 UUID v4
 function generateUUIDv4() {
     return uuidv4()
