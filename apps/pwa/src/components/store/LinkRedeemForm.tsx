@@ -116,7 +116,7 @@ export default function LinkRedeemForm({
             className="mx-auto mb-6 mt-4 h-12 w-[90%]"
             disabled={isLoading}
           >
-            {isLoading ? <Spinner /> : "Create"}
+            {isLoading ? <Spinner /> : "Link Receiver"}
           </Button>
         </form>
       </Form>

@@ -18,6 +18,10 @@ import {
     DialogFooter,
     DialogClose
 } from "@/components/ui/dialog"
+import RegisterForm from "@/components/store/RegisterForm"
+import { Input } from "@/components/ui/input"
+import { getUserId, setReceiver } from "@/lib/account"
+import axios from 'axios';
 
 export default function page() {
 
@@ -29,22 +33,45 @@ export default function page() {
     const [wallet, setWallet] = useState("TEST")
     const [balance, setBalance] = useState(1000)
     const [disconnectOpen, setDisconnectOpen] = useState(false)
-    const [exportOpen, setExportOpen] = useState(false)
+    const [linkedOpen, setLinkedOpen] = useState(false);
 
-    const createAccount = async () => {
-        // TODO
-        setSinged(true)
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            'Access-Control-Allow-Origin': '*',
+            "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+        }
     }
 
     const disconnectAccount = async () => {
         setSinged(false)
     }
 
+    useEffect(() => {
+        getUserId().then(id => {
+            if (id) {
+                axios.get(`https://hiraijin.kidneyweakx.workers.dev/users/${id}`, config)
+                    .then(function (response) {
+                        console.log(response.data.data);
+                        if (response.data.data) {
+                            setReceiver(response.data.data)
+                            setWallet(id)
+                            setSinged(true)
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        })
+    }, [])
+
     return (
         <main>
             <div className="mt-6 flex flex-col items-center">
                 <h1 className="mt-3 text-2xl font-bold">
-                    {isSigned ? 'TEST' : "WELCOME Hiraijin"}
+                    {isSigned ? 'TEST' : "WELCOME HIRAIJIN"}
                 </h1>
             </div>
             {
@@ -96,10 +123,7 @@ export default function page() {
                     :
                     (
                         <div className="flex flex-col items-center justify-center mt-12">
-                            <Button
-                                onClick={createAccount}>
-                                Create Account
-                            </Button>
+                            <RegisterForm setSigned={setSinged} />
                         </div>
                     )
             }
@@ -127,7 +151,6 @@ export default function page() {
                     </div>
                 </DialogContent>
             </Dialog>
-
         </main>
     )
 }
