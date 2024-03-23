@@ -32,7 +32,9 @@ export default function page() {
                     .then(function (response) {
                         if (response.data.id) {
                             console.log(response.data.walletAddress)
+                            console.log(response.data.balance)
                             setWallet(response.data.walletAddress)
+                            setBalance(response.data.balance)
                             setIsSigned(true)
                         }
                     })
@@ -43,6 +45,11 @@ export default function page() {
         })
     }, [isSigned])
 
+    const generateCode = async (id: string) => {
+        const res = await axios.get(`http://localhost:8787/users/${id}`, config)
+        setWallet(res.data.id)
+        setQRCode(true)
+    }
     return (
         <main>
             <div className='flex flex-col justify-center items-center'>
@@ -79,17 +86,7 @@ export default function page() {
                     onClick={() =>
                         getUserId().then(id => {
                             if (id) {
-                                axios.get(`http://localhost:8787/users/${id}`, config)
-                                    .then(function (response) {
-                                        console.log(response.data.data);
-                                        if (response.data.data) {
-                                            setWallet(response.data.walletID)
-                                            setQRCode(true)
-                                        }
-                                    })
-                                    .catch(function (error) {
-                                        console.log(error);
-                                    });
+                                generateCode(id)
                             }
                         })
                     }>
