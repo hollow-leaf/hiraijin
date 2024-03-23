@@ -25,9 +25,8 @@ export default (app: OpenAPIHono) => {
   // path: /users/{id}
   app.openapi(UserController, async (c: any) => {
     const { id } = c.req.valid('param') as any
-    const { data } = c.req.valid('json') as any
-    const res = JSON.parse(data)
-    const result =  await transfer(res.from, res.to, res.tokenId, res.amount)
+    const { data, from, tokenId, amount } = c.req.valid('json') as any
+    const result =  await transfer(from, id, tokenId, amount)
     return c.json({
       result
     })

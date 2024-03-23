@@ -11,4 +11,7 @@ export const paySchema = createSchema('User', {
 
 export const bodySchema = z.object({
   data: z.string(),
+  from: z.string(),
+  tokenId: z.string(),
+  amount: z.string()
 });
