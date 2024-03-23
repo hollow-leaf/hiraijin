@@ -47,15 +47,12 @@ export default (app: OpenAPIHono) => {
     const { id } = c.req.valid('param') as any
     const walletID = await c.env.hirai?.get(`${id}-id`)
     const balance: any = await getBalance(walletID)
-    const amount = balance.data.tokenBalances[1].amount
-    const tokenId = balance.data.tokenBalances[1].token.id
     const walletAddress = await c.env.hirai?.get(`${id}-address`)
     return c.json({
       id,
       walletID,
       walletAddress,
-      amount,
-      tokenId
+      balance
     })
   })
 
