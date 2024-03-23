@@ -52,7 +52,7 @@ export async function createWallets() {
             'authorization': `Bearer ${ENV}`,
         },
         body: JSON.stringify({
-            blockchains: ['MATIC-MUMBAI'],
+            blockchains: ['ETH-SEPOLIA'],
             idempotencyKey: uuid,
             walletSetId: '018e69e1-91ed-7352-bba2-63179fcc7eed',
             entitySecretCiphertext: encryptedData,
