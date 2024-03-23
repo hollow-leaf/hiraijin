@@ -3,13 +3,13 @@ import forge from 'node-forge'
 import { v4 as uuidv4 } from 'uuid'
 import { ENV } from '../utils/env'
 // 生成 UUID v4
-function generateUUIDv4() {
+export function generateUUIDv4() {
     return uuidv4()
 }
 
   
 // 加密函數
-function encryptData(publicKey: any, entitySecret: any) {
+export function encryptData(publicKey: any, entitySecret: any) {
     const encryptedData = publicKey.encrypt(entitySecret, 'RSA-OAEP', {
         md: forge.md.sha256.create(),
         mgf1: {
